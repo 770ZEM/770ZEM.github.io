@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEPETO</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/free-claim/free-claim.github.io/refs/heads/main/zepeto-favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%);
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Notification Banner */
+        .notification-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            padding: 8px 0;
+            z-index: 1000;
+            overflow: hidden;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .notification-text {
+            display: inline-block;
+            white-space: nowrap;
+            text-align: center;
+            width: 100%;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .notification-text.fade-out {
+            opacity: 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            position: relative;
+            padding: 25px 20px 0px;
+            background: radial-gradient(circle at center, rgba(255, 105, 180, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 15px;
+            margin-top: 20px;
+            background: linear-gradient(45deg, #ff69b4, #ff1493, #ff69b4);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.5s ease-out 0.2s forwards, gradientShift 2s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.5s ease-out 0.4s forwards;
+            color: #333;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .outfit-preview {
+            position: relative;
+            margin: 15px 0;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: scaleIn 0.5s ease-out 0.6s forwards;
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .zem-icon {
+            width: 60px;
+            height: 60px;
+            animation: glow 1.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 15px #ff69b4);
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #ff69b4) brightness(1); }
+            to { filter: drop-shadow(0 0 30px #ff1493) brightness(1.2); }
+        }
+
+        @keyframes floatGift {
+            from { transform: translateY(0px) rotate(0deg); }
+            to { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(255, 105, 180, 0.4);
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.5s ease-out 1.2s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(-5px) scale(1.05); }
+            40% { transform: translateY(-10px) scale(1.08); }
+            80% { transform: translateY(-3px) scale(1.03); }
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+
+
+        /* Video Section */
+        .video-section {
+            margin: 15px 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.5s ease-out 0.8s forwards;
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+
+
+
+
+        /* Reward Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            margin: 15px;
+            border: 2px solid #ff69b4;
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+            animation: modalPop 0.3s ease-out;
+            color: #333;
+        }
+
+        .share-container {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            padding: 10px 15px;
+            margin: 15px 0;
+            gap: 8px;
+        }
+
+        .share-link {
+            flex: 1;
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            color: #333;
+            outline: none;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .copy-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .copy-btn:hover {
+            background: #ff1493;
+            transform: scale(1.05);
+        }
+
+        .share-instructions {
+            font-size: 1rem;
+            color: #444;
+            font-style: normal;
+            font-weight: 500;
+            margin-top: 15px;
+            line-height: 1.5;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #ff69b4;
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+
+        .modal p {
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+
+        .close-modal {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #ff1493;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 25px 15px 15px;
+                min-height: 60vh;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+
+            .video-container {
+                max-width: 300px;
+            }
+
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 1rem;
+                margin: 15px 0;
+            }
+
+            .zem-icon {
+                width: 50px;
+                height: 50px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .notification-banner {
+                font-size: 0.8rem;
+                padding: 6px 0;
+            }
+        }
+
+        /* Party Popper Effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff69b4;
+            z-index: 1500;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #ff1493;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #ffd700;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #00ff00;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Banner -->
+    <div class="notification-banner">
+        <div class="notification-text" id="notificationText">@A57WBU just received 770 ZEM's! 💎</div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">Get 770 ZEM's</h1>
+        <p class="hero-subtitle">Wear the outfit and get your reward instantly!</p>
+        
+        <a href="#" class="cta-button" id="ctaButton">Get 770 ZEM's Now</a>
+        
+        <!-- Video Section -->
+        <section class="video-section">
+            <div class="video-container">
+                <video autoplay muted loop playsinline webkit-playsinline>
+                    <source src="zepeto.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </section>
+
+        <div class="outfit-preview">
+            <img src="https://raw.githubusercontent.com/free-claim/free-claim.github.io/refs/heads/main/img_zem.png" alt="ZEM Icon" class="zem-icon">
+        </div>
+
+        <div class="instructions-box" style="background: linear-gradient(135deg, #ffffff, #f8f9fa); border: 2px solid #ff69b4; border-radius: 15px; padding: 15px; margin: 15px 0; max-width: 350px; box-shadow: 0 8px 25px rgba(255, 105, 180, 0.2);">
+            <h3 style="color: #ff69b4; margin-bottom: 10px; font-size: 1.2rem;">How to Get 770 ZEM's</h3>
+            <div style="text-align: left; color: #333;">
+                <p style="margin-bottom: 6px;"><strong>1.</strong> Share to 30 active friends</p>
+                <p style="margin-bottom: 6px;"><strong>2.</strong> Wear the outfit adn Love wishlist to claim reward</p>
+                <p style="margin-bottom: 0;"><strong>3.</strong> Get 770 ZEM's instantly</p>
+            </div>
+        </div>
+
+        <div class="gift-icon">
+            <img src="https://raw.githubusercontent.com/free-claim/free-claim.github.io/refs/heads/main/Gift.png" alt="Gift" style="width: 220px; height: 220px; margin-top: 10px; animation: floatGift 2s ease-in-out infinite alternate;">
+        </div>
+    </section>
+
+
+
+    <!-- Reward Modal -->
+    <div class="modal" id="rewardModal">
+        <div class="modal-content">
+            <h2>🎉 Congratulations!</h2>
+            <div class="share-container">
+                <input type="text" class="share-link" value="770ZEM.github.io" readonly>
+                <button class="copy-btn" onclick="copyLink()">Copy</button>
+            </div>
+            <div class="share-instructions">
+                Wear the outfit and Love wishlist Copy-Share to 30 active friends to get 770 ZEM's
+            </div>
+            <button class="close-modal" onclick="closeModal()" style="margin-top: 20px;">Claim!</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate Random Username
+        function generateRandomUsername() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let username = '@';
+            for (let i = 0; i < 6; i++) {
+                username += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return username;
+        }
+
+        // Update Notification Banner
+        function updateNotification() {
+            const notificationText = document.getElementById('notificationText');
+            
+            // Fade out
+            notificationText.classList.add('fade-out');
+            
+            setTimeout(() => {
+                const username = generateRandomUsername();
+                notificationText.textContent = `${username} just received 770 ZEM's! 💎`;
+                
+                // Fade in
+                notificationText.classList.remove('fade-out');
+            }, 500);
+        }
+
+        // Party Popper Effect
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animation = 'confettiFall ' + (Math.random() * 3 + 2) + 's linear forwards';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Copy Link Function
+        function copyLink() {
+            const linkInput = document.querySelector('.share-link');
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(linkInput.value);
+            
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            copyBtn.style.background = '#007bff';
+            copyBtn.style.minWidth = '70px';
+            
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+                copyBtn.style.background = '#ff69b4';
+            }, 2000);
+        }
+
+        // Modal Functions
+        function showModal() {
+            createConfetti();
+            document.getElementById('rewardModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('rewardModal').style.display = 'none';
+            // Use location.href for better iOS compatibility
+            setTimeout(() => {
+                window.location.href = 'Shop.html';
+            }, 100);
+        }
+
+        // Event Listeners
+        document.getElementById('ctaButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            showModal();
+        });
+
+        // Initialize
+        setInterval(updateNotification, 7000); // Update every 7 seconds
+
+        // Click outside modal to close (without redirect)
+        document.getElementById('rewardModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('rewardModal').style.display = 'none';
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'967ca36a977ce77c',t:'MTc1Mzk2MDExMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
